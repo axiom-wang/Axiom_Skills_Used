@@ -8,8 +8,6 @@ The `skills/` directory contains one copy of each distinct local skill, with sup
 
 Identical skills are deduplicated by `SKILL.md` content. When versions share a name but have different content, the alternate version is retained with a source suffix such as `--claude`.
 
-Feishu/Lark-related skills are intentionally excluded.
-
 ## Security
 
 Local environment files and credentials are intentionally excluded. Configure any required API keys in your own local environment before using a skill.
