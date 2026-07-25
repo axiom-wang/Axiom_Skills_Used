@@ -1,0 +1,193 @@
+{
+  "skill_name": "template-to-skill",
+  "description": "测试 skill_generator_skill 能否将不同类型的前端模版正确转化为可用的 SKILL",
+  "eval_levels": {
+    "structural": "Shell 命令验证文件结构和格式，自动执行，返回 pass/fail",
+    "semantic": "LLM 判断产出质量，需要把产出内容喂给 AI 并用 prompt 评估"
+  },
+  "evals": [
+    {
+      "id": 1,
+      "name": "luxury-fashion-ecommerce",
+      "description": "中型电商模版，有对话历史，验证完整流程",
+      "prompt": "把 /Users/xuyouwan/Downloads/frontend_original 这个前端模版转化为 SKILL，对话历史在 /Users/xuyouwan/Downloads/b075e8c48bde41c89d620ba335ab60f6-v5.MGXEnv.json",
+      "input": {
+        "template_path": "/Users/xuyouwan/Downloads/frontend_original",
+        "conversation_path": "/Users/xuyouwan/Downloads/b075e8c48bde41c89d620ba335ab60f6-v5.MGXEnv.json"
+      },
+      "assertions": {
+        "structural": [
+          {
+            "id": "files-exist",
+            "description": "所有必需文件存在",
+            "commands": [
+              "test -f $OUTPUT/SKILL.md",
+              "test -f $OUTPUT/tasks/01-generate-code.md",
+              "test -f $OUTPUT/tasks/02-verify.md",
+              "test -f $OUTPUT/reference/CONTEXT.md",
+              "test -f $OUTPUT/rules/architecture.md",
+              "test -f $OUTPUT/rules/design-system.md"
+            ]
+          },
+          {
+            "id": "frontmatter-valid",
+            "description": "SKILL.md 包含 YAML frontmatter（name + description）",
+            "commands": [
+              "head -1 $OUTPUT/SKILL.md | grep -q '^---'",
+              "grep -q '^name:' $OUTPUT/SKILL.md",
+              "grep -q '^description:' $OUTPUT/SKILL.md"
+            ]
+          },
+          {
+            "id": "no-init-task",
+            "description": "tasks/ 中没有 init 步骤",
+            "commands": [
+              "! ls $OUTPUT/tasks/ | grep -q 'init'"
+            ]
+          },
+          {
+            "id": "reference-size-limit",
+            "description": "reference/ 总行数不超过 2000",
+            "commands": [
+              "[ $(find $OUTPUT/reference -type f \\( -name '*.md' -o -name '*.tsx' -o -name '*.ts' -o -name '*.css' \\) -exec cat {} + | wc -l) -le 2000 ]"
+            ]
+          },
+          {
+            "id": "has-reference-source",
+            "description": "reference/ 包含至少 1 个源码文件",
+            "commands": [
+              "find $OUTPUT/reference -name '*.tsx' -o -name '*.ts' -o -name '*.css' | grep -q '.'"
+            ]
+          },
+          {
+            "id": "no-platform-tools",
+            "description": "产出中不包含平台工具名称",
+            "commands": [
+              "! grep -rq 'FrontendEngineer\\|Editor\\.write\\|Terminal\\.run\\|CheckUI\\.run' $OUTPUT/SKILL.md $OUTPUT/tasks/"
+            ]
+          },
+          {
+            "id": "has-customization-points",
+            "description": "architecture.md 包含可定制点表格",
+            "commands": [
+              "grep -q '可定制点' $OUTPUT/rules/architecture.md",
+              "grep -q '定制方式' $OUTPUT/rules/architecture.md"
+            ]
+          },
+          {
+            "id": "generate-code-has-checklist",
+            "description": "01-generate-code.md 包含自检清单",
+            "commands": [
+              "grep -q '自检' $OUTPUT/tasks/01-generate-code.md || grep -q 'checklist' $OUTPUT/tasks/01-generate-code.md"
+            ]
+          }
+        ],
+        "semantic": [
+          {
+            "id": "context-completeness",
+            "description": "CONTEXT.md 覆盖功能、风格、数据结构",
+            "prompt": "读取以下 CONTEXT.md 内容，判断它是否包含：1) 功能清单 2) 视觉风格描述 3) 数据结构（TypeScript 类型定义）。回答 PASS 或 FAIL 并说明原因。\n\n---\n{file:$OUTPUT/reference/CONTEXT.md}",
+            "expected": "PASS"
+          },
+          {
+            "id": "params-match-domain",
+            "description": "参数表适合电商/Store 领域",
+            "prompt": "读取以下 SKILL.md 的参数表部分，判断参数是否适合电商（Store）领域——应包含品牌名或业务描述相关参数，不应出现与电商无关的参数（如 data_domain, health_focus）。回答 PASS 或 FAIL。\n\n---\n{file:$OUTPUT/SKILL.md}",
+            "expected": "PASS"
+          },
+          {
+            "id": "design-system-has-inference-rules",
+            "description": "design-system.md 包含可操作的推断规则",
+            "prompt": "读取以下 design-system.md，判断它是否包含具体的推断映射表（品牌关键词→配色、定位→排版等），而不仅仅是抽象原则。至少需要 3 种以上具体的映射关系。回答 PASS 或 FAIL。\n\n---\n{file:$OUTPUT/rules/design-system.md}",
+            "expected": "PASS"
+          },
+          {
+            "id": "description-trigger-coverage",
+            "description": "SKILL.md description 覆盖常见触发短语",
+            "prompt": "读取以下 SKILL.md 的 frontmatter description，判断它是否覆盖了用户可能的触发方式（如'帮我做个XX网站'、'生成一个XX'等）。至少应包含 2 种以上触发场景。回答 PASS 或 FAIL。\n\n---\n{first_10_lines:$OUTPUT/SKILL.md}",
+            "expected": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "simple-single-page",
+      "description": "极简单页模版，无对话历史，验证最小化产出",
+      "prompt": "这是一个只有单页面的前端模版，帮我转化为 SKILL。对话历史在 /Users/xuyouwan/Downloads/simple-page-conv.json",
+      "input": {
+        "template_path": "<需要用户提供：只有 Index.tsx + index.css 的极简模版>",
+        "conversation_path": "<需要用户提供：极简对话历史>"
+      },
+      "assertions": {
+        "structural": [
+          {
+            "id": "minimal-reference",
+            "description": "reference/ 行数很小（小型模版全量复制也不大）",
+            "commands": [
+              "[ $(find $OUTPUT/reference -type f -exec cat {} + | wc -l) -le 500 ]"
+            ]
+          },
+          {
+            "id": "files-exist",
+            "description": "必需文件存在",
+            "commands": [
+              "test -f $OUTPUT/SKILL.md",
+              "test -f $OUTPUT/tasks/01-generate-code.md",
+              "test -f $OUTPUT/tasks/02-verify.md",
+              "test -f $OUTPUT/reference/CONTEXT.md",
+              "test -f $OUTPUT/rules/architecture.md",
+              "test -f $OUTPUT/rules/design-system.md"
+            ]
+          }
+        ],
+        "semantic": [
+          {
+            "id": "minimal-architecture",
+            "description": "架构约束不过度设计",
+            "prompt": "读取以下 architecture.md，该模版只有一个页面（单路由 /）。判断路由表是否只有 1 条路由，组件职责表是否为空或极简。如果定义了不存在的复杂路由或大量组件约束则 FAIL。\n\n---\n{file:$OUTPUT/rules/architecture.md}",
+            "expected": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "multi-domain-template",
+      "description": "非电商领域模版，验证领域适配能力",
+      "prompt": "把这个模版转化为 SKILL，对话历史在附件中。",
+      "input": {
+        "template_path": "<需要用户提供：非 Store 领域的模版，如 Course / AI Tools / Booking>",
+        "conversation_path": "<可选>"
+      },
+      "assertions": {
+        "structural": [
+          {
+            "id": "files-exist",
+            "description": "必需文件存在",
+            "commands": [
+              "test -f $OUTPUT/SKILL.md",
+              "test -f $OUTPUT/tasks/01-generate-code.md",
+              "test -f $OUTPUT/tasks/02-verify.md",
+              "test -f $OUTPUT/reference/CONTEXT.md"
+            ]
+          }
+        ],
+        "semantic": [
+          {
+            "id": "params-fit-domain",
+            "description": "参数表适配对应领域（不是 Store 的 brand_name 模式）",
+            "prompt": "读取以下 SKILL.md，已知此模版不是电商（Store）领域。判断参数表是否适配实际领域——不应出现 brand_name/price_range 这类电商特有参数（除非模版确实是电商）。回答 PASS 或 FAIL。\n\n---\n{file:$OUTPUT/SKILL.md}",
+            "expected": "PASS"
+          },
+          {
+            "id": "design-system-fits-domain",
+            "description": "推断规则适配对应领域",
+            "prompt": "读取以下 design-system.md，已知此模版不是电商领域。判断推断规则是否适配实际业务类型（不应出现'商品类型→图片比例'、'价位段→留白量'等电商特有规则）。回答 PASS 或 FAIL。\n\n---\n{file:$OUTPUT/rules/design-system.md}",
+            "expected": "PASS"
+          }
+        ]
+      }
+    }
+  ]
+}

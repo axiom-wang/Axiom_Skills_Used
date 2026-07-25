@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Authoring"
+  short_description: "Create or update Codex skills"
+  default_prompt: "Help me create or update a Codex skill. First identify the trigger, scope, and example requests, then scaffold the skill folder, write SKILL.md, validate the skill, and install it with junctions."

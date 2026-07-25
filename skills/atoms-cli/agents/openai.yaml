@@ -1,0 +1,4 @@
+interface:
+  display_name: "Atoms CLI"
+  short_description: "Operate Atoms app lifecycles via CLI"
+  default_prompt: "Use $atoms-cli to inspect, steer, and operate an Atoms app lifecycle from the terminal."

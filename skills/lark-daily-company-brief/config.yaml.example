@@ -1,0 +1,148 @@
+# lark-daily-company-brief 配置示例
+# 复制此文件为 config.yaml 并按需修改
+# 路径：/Users/你的用户名/.config/lark-daily-company-brief/config.yaml
+
+# ─── 公司态势覆盖范围 ────────────────────────────────────────
+company:
+  name: "DeepWisdom"
+  timezone: "Asia/Shanghai"
+
+# ─── 时间范围 ────────────────────────────────────────────────
+time_range:
+  # 简报默认覆盖的时间范围（当天）
+  start_hour: 0      # 00:00
+  end_hour: 23       # 23:59
+  timezone: "Asia/Shanghai"
+
+# ─── 重点群组 ────────────────────────────────────────────────
+# 填写需要重点监控的公司群 chat_id（oc_xxx），这些群的消息会被单独拉取。
+# 获取方式：lark-cli im +chat-search --query "群名关键词" --format json
+# category 建议值：project / announcement / management / business / engineering / incident / operation / other
+priority_chats:
+  - id: "oc_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    name: "项目 A 技术群"
+    category: "project"
+  - id: "oc_yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+    name: "全员公告"
+    category: "announcement"
+  - id: "oc_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    name: "故障应急群"
+    category: "incident"
+
+# ─── 排除的群组 ──────────────────────────────────────────────
+# 这些群的消息会被完全忽略。
+# 建议排除：个人群、用户反馈噪声群、非公司运行信息群、重复机器人通知群。
+excluded_chats:
+  - id: "oc_zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+    name: "个人或非工作群"
+  - id: "oc_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    name: "高噪声用户反馈群"
+
+# ─── 公司级关键词配置 ────────────────────────────────────────
+keywords:
+  # 公司级高优先级关键词（触发 ⭐ 标记）
+  company_high_priority:
+    - "上线"
+    - "发布"
+    - "灰度"
+    - "回滚"
+    - "故障"
+    - "数据异常"
+    - "延期"
+    - "阻塞"
+    - "风险"
+    - "紧急"
+    - "决定"
+    - "确认"
+    - "定了"
+    - "deadline"
+    - "截止"
+    - "审批"
+    - "客户"
+    - "交付"
+    - "需求变更"
+    - "里程碑"
+    - "负责人变更"
+    - "跨团队"
+    - "依赖"
+    - "P0"
+    - "P1"
+    - "CR"
+    - "LGTM"
+    - "revert"
+
+  # 项目/产品关键词（用于识别重点项目和产品动态）
+  project_keywords:
+    - "DeepFlow"
+    - "Atoms"
+    - "AppWorld"
+    - "MGX"
+    - "数据增长"
+
+  # 风险、事故、异常关键词
+  risk_keywords:
+    - "故障"
+    - "回滚"
+    - "阻塞"
+    - "延期"
+    - "风险"
+    - "P0"
+    - "P1"
+    - "紧急"
+    - "数据异常"
+    - "缺数"
+
+  # 决策、方案、里程碑关键词
+  decision_keywords:
+    - "决定"
+    - "确认"
+    - "定了"
+    - "方案"
+    - "评审"
+    - "里程碑"
+    - "负责人变更"
+    - "按这个走"
+
+  # 客户、市场、业务关键词
+  business_keywords:
+    - "客户"
+    - "商机"
+    - "合同"
+    - "续费"
+    - "交付"
+    - "竞品"
+    - "业务方"
+    - "需求变更"
+
+  # 低优先级关键词（触发过滤）
+  low_priority:
+    - "吃饭"
+    - "下班"
+    - "打卡"
+    - "早安"
+    - "晚安"
+
+# ─── 输出配置 ────────────────────────────────────────────────
+output:
+  # 留空时使用技能默认目录：
+  # D:\iCloudDrive\iCloud~md~obsidian\default\Career\deepwisdom\每日简报
+  save_dir: 'D:\iCloudDrive\iCloud~md~obsidian\default\Career\deepwisdom\每日简报'
+
+  # 不追加到飞书文档，只保存本地 Markdown。
+  append_to_lark_doc: false
+  lark_doc_token: ""
+
+# ─── 数据拉取配置 ────────────────────────────────────────────
+fetch:
+  # 每个重点群最多拉取的消息数
+  max_messages_per_chat: 100
+
+  # 全局关键词搜索最多返回条数
+  max_search_results: 200
+
+  # 是否拉取文档更新（需要 drive / space 权限）
+  fetch_drive_updates: false
+
+  # 公司态势雷达不使用个人任务和个人日程
+  fetch_tasks: false
+  fetch_calendar: false

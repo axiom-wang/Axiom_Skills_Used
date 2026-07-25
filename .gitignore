@@ -1,0 +1,10 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
+# Generated or machine-specific files
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db

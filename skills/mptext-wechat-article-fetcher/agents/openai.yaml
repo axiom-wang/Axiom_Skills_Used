@@ -1,0 +1,3 @@
+display_name: MPText WeChat Fetcher
+short_description: Fetch WeChat article bodies via MPText.
+default_prompt: Use my MPText API key to search a WeChat official account, fetch article lists for a date range, and download article bodies.
