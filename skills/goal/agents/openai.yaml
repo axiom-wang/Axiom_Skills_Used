@@ -1,0 +1,4 @@
+interface:
+  display_name: "Goal Mode"
+  short_description: "Clarify goals, criteria, and next actions"
+  default_prompt: "Use $goal to clarify the objective, define success criteria, and drive the task to completion."

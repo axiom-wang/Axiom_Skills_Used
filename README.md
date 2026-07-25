@@ -1,10 +1,14 @@
 # Axiom Skills Used
 
-Personal collection of Codex skills used in daily work.
+Personal collection of skills used in daily work with Codex, Claude, and other local agent environments.
 
 ## Contents
 
-The `skills/` directory mirrors the local skill collection, with one skill per folder. Each skill contains its own `SKILL.md` and any supporting references or scripts.
+The `skills/` directory contains one copy of each distinct local skill, with supporting references and scripts where available. It is collected from the local Codex, `.agents`, and the formal `.claude/skills` directories.
+
+Identical skills are deduplicated by `SKILL.md` content. When versions share a name but have different content, the alternate version is retained with a source suffix such as `--claude`.
+
+Feishu/Lark-related skills are intentionally excluded.
 
 ## Security
 
