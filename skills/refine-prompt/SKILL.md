@@ -66,7 +66,7 @@ When the task involves building or restyling UI (components, pages, layouts, vis
 Skill `SKILL.md` files live under `~/.claude/skills/<skill-name>/SKILL.md` (junctions) or `~/.agent-skills/**/<skill-name>/SKILL.md` (registry). Use `Glob` to locate one if the exact path is unknown.
 
 Skills worth consulting for frontend/design work:
-- **frontend-design** — distinctive, production-grade frontend interfaces that avoid generic AI aesthetics.
+- **design-taste-frontend** — its §14 pre-flight matrix and §9 AI-tells list are the best source of observable acceptance criteria for frontend prompts.
 - **impeccable** — designing, redesigning, critiquing, auditing, and polishing UI; strongest fit for restyling and UX-quality work.
 - **claude-design** / **design-md** — design conventions and design-doc structure.
 - **popular-web-designs** — references for current high-quality web design patterns.
